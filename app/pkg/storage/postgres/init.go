@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"context"
-	"db-backuper/app/config"
+	"db-backuper/config"
 	"fmt"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
