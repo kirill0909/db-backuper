@@ -1,0 +1,11 @@
+{
+  "Postgres": {
+        "Host": "localhost",
+        "Port": "5432",
+        "User": "postgres",
+        "Password": "123",
+        "DBName": "demo",
+        "SSLMode": "disable",
+        "PGDriver": "pgx"
+    }
+}

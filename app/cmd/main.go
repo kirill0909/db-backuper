@@ -1,7 +1,9 @@
 package main
 
 import (
-	"db-backuper/config"
+	"context"
+	"db-backuper/app/config"
+	"db-backuper/app/pkg/storage/postgres"
 	"log"
 )
 
@@ -17,6 +19,14 @@ func main() {
 	}
 	log.Println("Config loaded")
 
-	log.Printf("%+v", cfg)
+	ctx := context.Background()
+	pgDB, err := postgres.InitPGDB(ctx, cfg)
+	if err != nil {
+		log.Fatalf("PostgreSQL init error: %s", err.Error())
+	} else {
+		log.Printf("PostgreSQL status connection: %#v", pgDB.Stats())
+	}
+
+	log.Println(pgDB)
 
 }

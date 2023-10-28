@@ -11,7 +11,15 @@ type Config struct {
 	Postgres Postgres
 }
 
-type Postgres struct{}
+type Postgres struct {
+	Host     string `validate:"required"`
+	Port     string `validate:"required"`
+	User     string `validate:"required"`
+	Password string `validate:"required"`
+	DBName   string `validate:"required"`
+	SSLMode  string `validate:"required"`
+	PGDriver string `validate:"required"`
+}
 
 func LoadConfig() (*viper.Viper, error) {
 	v := viper.New()
