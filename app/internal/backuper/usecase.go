@@ -5,5 +5,5 @@ import (
 )
 
 type Backuper interface {
-	PGBackup(ctx context.Context)
+	PGBackup(ctx context.Context) error
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"db-backuper/config"
 	usecaseBackuper "db-backuper/internal/backuper/usecase"
 	"log"
@@ -22,12 +23,17 @@ func main() {
 	}
 	log.Println("Config loaded")
 
-	_ = usecaseBackuper.NewBackuper(cfg)
+	backuperUC := usecaseBackuper.NewBackuper(cfg)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
 	go func() {
 		ticker := time.NewTicker(time.Second * 5)
 		for ; true; <-ticker.C {
-			log.Println("hello")
+			if err := backuperUC.PGBackup(ctx); err != nil {
+				log.Println(err)
+			}
 		}
 	}()
 
