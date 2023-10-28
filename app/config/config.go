@@ -8,7 +8,8 @@ import (
 )
 
 type Config struct {
-	Postgres Postgres
+	Postgres   Postgres
+	BackupPath string `validate:"required"`
 }
 
 type Postgres struct {

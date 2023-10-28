@@ -31,9 +31,12 @@ func main() {
 	go func() {
 		ticker := time.NewTicker(time.Second * 5)
 		for ; true; <-ticker.C {
-			if err := backuperUC.PGBotDBBackup(ctx); err != nil {
+			now := time.Now()
+			if err := backuperUC.PGBotDBBackup(ctx, now); err != nil {
 				log.Println(err)
 			}
+
+			log.Printf("Successfully created backup of bot db at %v", now)
 		}
 	}()
 
