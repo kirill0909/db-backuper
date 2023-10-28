@@ -1,10 +1,13 @@
 package main
 
 import (
-	"context"
-	"db-backuper/app/config"
-	"db-backuper/app/pkg/storage/postgres"
+	"db-backuper/config"
+	usecaseBackuper "db-backuper/internal/backuper/usecase"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 func main() {
@@ -19,14 +22,16 @@ func main() {
 	}
 	log.Println("Config loaded")
 
-	ctx := context.Background()
-	pgDB, err := postgres.InitPGDB(ctx, cfg)
-	if err != nil {
-		log.Fatalf("PostgreSQL init error: %s", err.Error())
-	} else {
-		log.Printf("PostgreSQL status connection: %#v", pgDB.Stats())
-	}
+	_ = usecaseBackuper.NewBackuper(cfg)
 
-	log.Println(pgDB)
+	go func() {
+		ticker := time.NewTicker(time.Second * 5)
+		for ; true; <-ticker.C {
+			log.Println("hello")
+		}
+	}()
 
+	exitCh := make(chan os.Signal)
+	signal.Notify(exitCh, os.Interrupt, syscall.SIGTERM)
+	<-exitCh
 }

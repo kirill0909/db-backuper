@@ -1,3 +1,9 @@
-package usecase
+package backuper
 
-type Backuper interface{}
+import (
+	"context"
+)
+
+type Backuper interface {
+	PGBackup(ctx context.Context)
+}
