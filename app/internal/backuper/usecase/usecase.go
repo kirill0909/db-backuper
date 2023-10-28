@@ -47,7 +47,7 @@ func (u *Backuper) generateCMD() *exec.Cmd {
 	return exec.Command(
 		"docker",
 		"exec",
-		"demo-db",
+		"boost-my-skills-boot_db_1",
 		"env",
 		fmt.Sprintf("PGPASSWORD=%s", u.cfg.Postgres.Password),
 		"pg_dump",

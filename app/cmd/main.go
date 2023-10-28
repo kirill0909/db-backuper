@@ -29,7 +29,7 @@ func main() {
 	defer cancel()
 
 	go func() {
-		ticker := time.NewTicker(time.Second * 5)
+		ticker := time.NewTicker(time.Minute * 15)
 		for ; true; <-ticker.C {
 			now := time.Now()
 			if err := backuperUC.PGBotDBBackup(ctx, now); err != nil {
