@@ -6,23 +6,48 @@ import (
 	"db-backuper/internal/backuper"
 	"fmt"
 	"github.com/pkg/errors"
+	"log"
 	"os"
 	"os/exec"
 	"time"
 )
 
-type Backuper struct {
-	cfg *config.Config
+type BackuperUC struct {
+	backuperPGRepo backuper.PGRepo
+	cfg            *config.Config
+	checkTime      int64
 }
 
-func NewBackuper(cfg *config.Config) backuper.Backuper {
-	return &Backuper{cfg: cfg}
+func NewBackuperUC(backuperPGRepo backuper.PGRepo, cfg *config.Config) backuper.Usecase {
+	return &BackuperUC{backuperPGRepo: backuperPGRepo, cfg: cfg, checkTime: 0}
 }
 
-func (u *Backuper) PGBotDBBackup(ctx context.Context, now time.Time) error {
+func (u *BackuperUC) PGBotDBBackup(ctx context.Context, now time.Time) error {
+
+	res, err := u.backuperPGRepo.IsBotDBUpdated(ctx, u.checkTime)
+	if err != nil {
+		return err
+	}
+	u.checkTime = now.Unix()
+
+	switch res {
+	case true:
+		log.Printf("Bot db was updated at %v", now)
+		if err := u.handleUpdatedCase(now); err != nil {
+			return err
+		}
+	case false:
+		log.Printf("Bot db was not updated at %v", now)
+		return nil
+	}
+
+	return nil
+}
+
+func (u *BackuperUC) handleUpdatedCase(now time.Time) error {
 	cmd := u.generateCMD()
 
-	filePath := fmt.Sprintf(u.cfg.BackupPath,
+	filePath := fmt.Sprintf(u.cfg.BotDBBackupPath,
 		now.Year(), now.Month(), now.Day(),
 		now.Hour(), now.Minute(), now.Second())
 	fileMode := os.FileMode(0600)
@@ -43,11 +68,11 @@ func (u *Backuper) PGBotDBBackup(ctx context.Context, now time.Time) error {
 	return nil
 }
 
-func (u *Backuper) generateCMD() *exec.Cmd {
+func (u *BackuperUC) generateCMD() *exec.Cmd {
 	return exec.Command(
 		"docker",
 		"exec",
-		"boost-my-skills-boot_db_1",
+		u.cfg.BotDBContainerName,
 		"env",
 		fmt.Sprintf("PGPASSWORD=%s", u.cfg.Postgres.Password),
 		"pg_dump",
