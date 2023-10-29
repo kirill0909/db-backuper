@@ -5,6 +5,6 @@ import (
 	"time"
 )
 
-type Backuper interface {
+type Usecase interface {
 	PGBotDBBackup(ctx context.Context, now time.Time) error
 }

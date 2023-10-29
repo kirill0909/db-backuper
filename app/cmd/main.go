@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"db-backuper/config"
+	repositoryBackuper "db-backuper/internal/backuper/repository"
 	usecaseBackuper "db-backuper/internal/backuper/usecase"
+	"db-backuper/pkg/storage/postgres"
 	"log"
 	"os"
 	"os/signal"
@@ -23,20 +25,26 @@ func main() {
 	}
 	log.Println("Config loaded")
 
-	backuperUC := usecaseBackuper.NewBackuper(cfg)
-
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	pgDB, err := postgres.InitPGDB(ctx, cfg)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Printf("PostgreSQL connection stats: %#v", pgDB.Stats())
+	}
+
+	backuperPGRepo := repositoryBackuper.NewBackuperPGRepo(pgDB, cfg)
+	backuperUC := usecaseBackuper.NewBackuperUC(backuperPGRepo, cfg)
+
 	go func() {
-		ticker := time.NewTicker(time.Minute * 15)
+		ticker := time.NewTicker(time.Second * 15)
 		for ; true; <-ticker.C {
 			now := time.Now()
 			if err := backuperUC.PGBotDBBackup(ctx, now); err != nil {
 				log.Println(err)
 			}
-
-			log.Printf("Successfully created backup of bot db at %v", now)
 		}
 	}()
 
