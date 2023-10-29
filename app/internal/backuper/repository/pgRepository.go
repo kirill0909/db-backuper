@@ -5,18 +5,25 @@ import (
 	"db-backuper/config"
 	"db-backuper/internal/backuper"
 	"github.com/jmoiron/sqlx"
-	"time"
+	"github.com/pkg/errors"
 )
 
 type BackuperPGRepo struct {
-	pgDB *sqlx.DB
-	cfg  *config.Config
+	db  *sqlx.DB
+	cfg *config.Config
 }
 
-func NewBackuperPGRepo(pgDB *sqlx.DB, cfg *config.Config) backuper.PGRepo {
-	return &BackuperPGRepo{pgDB: pgDB, cfg: cfg}
+func NewBackuperPGRepo(db *sqlx.DB, cfg *config.Config) backuper.PGRepo {
+	return &BackuperPGRepo{db: db, cfg: cfg}
 }
 
-func (r *BackuperPGRepo) IsBotDBUpdated(ctx context.Context, now time.Time) (bool, error) {
-	return false, nil
+func (r *BackuperPGRepo) IsBotDBUpdated(ctx context.Context, now int64) (bool, error) {
+
+	var result bool
+	if err := r.db.GetContext(ctx, &result, queryIsBotDBUpdated, now); err != nil {
+		err = errors.Wrap(err, "BackuperPGRepo.IsBotDBUpdated.queryIsBotDBUpdated")
+		return false, err
+	}
+
+	return result, nil
 }

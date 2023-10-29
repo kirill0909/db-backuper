@@ -2,9 +2,8 @@ package backuper
 
 import (
 	"context"
-	"time"
 )
 
 type PGRepo interface {
-	IsBotDBUpdated(ctx context.Context, now time.Time) (bool, error)
+	IsBotDBUpdated(ctx context.Context, now int64) (bool, error)
 }
