@@ -47,7 +47,7 @@ func (u *BackuperUC) PGBotDBBackup(ctx context.Context, now time.Time) error {
 func (u *BackuperUC) handleUpdatedCase(now time.Time) error {
 	cmd := u.generateCMD()
 
-	filePath := fmt.Sprintf(u.cfg.BackupPath,
+	filePath := fmt.Sprintf(u.cfg.BotDBBackupPath,
 		now.Year(), now.Month(), now.Day(),
 		now.Hour(), now.Minute(), now.Second())
 	fileMode := os.FileMode(0600)
