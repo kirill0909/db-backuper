@@ -2,8 +2,9 @@ package repository
 
 import (
 	"context"
-	"db-backuper/config"
-	"db-backuper/internal/backuper"
+	"db-backuper/app/config"
+	"db-backuper/app/internal/backuper"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 )

@@ -2,14 +2,15 @@ package usecase
 
 import (
 	"context"
-	"db-backuper/config"
-	"db-backuper/internal/backuper"
+	"db-backuper/app/config"
+	"db-backuper/app/internal/backuper"
 	"fmt"
-	"github.com/pkg/errors"
 	"log"
 	"os"
 	"os/exec"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 type BackuperUC struct {

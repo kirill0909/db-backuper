@@ -2,8 +2,9 @@ package postgres
 
 import (
 	"context"
-	"db-backuper/config"
+	"db-backuper/app/config"
 	"fmt"
+
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"

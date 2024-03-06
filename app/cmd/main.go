@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"db-backuper/config"
-	repositoryBackuper "db-backuper/internal/backuper/repository"
-	usecaseBackuper "db-backuper/internal/backuper/usecase"
-	"db-backuper/pkg/storage/postgres"
+	"db-backuper/app/config"
+	repositoryBackuper "db-backuper/app/internal/backuper/repository"
+	usecaseBackuper "db-backuper/app/internal/backuper/usecase"
+	"db-backuper/app/pkg/storage/postgres"
 	"log"
 	"os"
 	"os/signal"
