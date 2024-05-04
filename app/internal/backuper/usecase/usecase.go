@@ -53,7 +53,7 @@ func (u *BackuperUC) handleUpdatedCase(now time.Time) error {
 		now.Hour(), now.Minute(), now.Second())
 	fileMode := os.FileMode(0644)
 
-	outFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, fileMode)
+	outFile, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, fileMode)
 	if err != nil {
 		err = errors.Wrap(err, "Backuper.PGBotDBBackup.OpenFile")
 		return err
