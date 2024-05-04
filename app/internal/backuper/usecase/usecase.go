@@ -51,7 +51,7 @@ func (u *BackuperUC) handleUpdatedCase(now time.Time) error {
 	filePath := fmt.Sprintf(u.cfg.BotDBBackupPath,
 		now.Year(), now.Month(), now.Day(),
 		now.Hour(), now.Minute(), now.Second())
-	fileMode := os.FileMode(0600)
+	fileMode := os.FileMode(0644)
 
 	outFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, fileMode)
 	if err != nil {
